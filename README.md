@@ -7,7 +7,7 @@ sudo chown www-data:www-data /var/log/gunicorn
 gunicorn --config /path/to/gunicorn_config.py /path/to/syncclip_server:app
 
 ## Setup Nginx proxy
-`
+```
 location ~ ^/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/ {
     # Rewrite rule to remove UUID from the URL
     rewrite ^/([a-fA-F0-9-]+)/(.*)$ /$2 break;
@@ -18,4 +18,4 @@ location ~ ^/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
 }
-`
+```
