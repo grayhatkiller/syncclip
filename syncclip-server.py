@@ -7,7 +7,7 @@ import zlib
 import html
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
 DATABASE = 'syncclip.db'
 
@@ -50,8 +50,7 @@ def update_clipboard(token):
     db.execute('UPDATE clipboards SET content = ?, last_updated = CURRENT_TIMESTAMP WHERE token = ?',
               (sqlite3.Binary(compressed_content), token))
     db.commit()
-
-    # Remove old entries, keeping only the latest 10 across all tokens
+    
     db.execute('''DELETE FROM clipboards WHERE token NOT IN
                   (SELECT token FROM clipboards ORDER BY last_updated DESC LIMIT 10)''')
     db.commit()
