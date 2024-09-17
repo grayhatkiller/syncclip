@@ -2,13 +2,13 @@ import requests
 import pyperclip
 import time
 
-SERVER_URL = 'https://example.com'  # Update this to your production URL
+SERVER_URL = 'https://example.com'  # CHANGEME
 TOKEN = None
 
 def get_token():
     global TOKEN
     if TOKEN is None:
-        response = requests.get(f'{SERVER_URL}/token')  # Note: verify=False is removed
+        response = requests.get(f'{SERVER_URL}/token')
         if response.status_code == 201:
             TOKEN = response.json()['token']
         else:
@@ -46,7 +46,7 @@ def sync_clipboard():
         except Exception as e:
             print(f"Error: {str(e)}")
         
-        time.sleep(5)  # Wait for 5 seconds before next sync
+        time.sleep(5)
 
 def main():
     token = get_token()
