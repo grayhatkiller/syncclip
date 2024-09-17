@@ -8,6 +8,7 @@ This Python tool is designed to facilitate clipboard sharing between two hosts t
 4. **End-to-End Encryption**: Ensures clipboard data is securely transmitted between the hosts and the server, protecting sensitive content during transfer.
 5. **Multi-Host Support**: The tool supports multiple hosts, allowing each to register with the server and access its own clipboard history securely.
 6. **Platform Independence**: Designed to be compatible with multiple operating systems, allowing flexible deployment across diverse environments.
+7. **Capacity Limitations**: The tool supports the copying and pasting of content up to 30,000 lines, ensuring robust functionality for most use cases while maintaining performance and efficiency.
 
 This tool simplifies the process of clipboard sharing between disconnected systems while maintaining security and data integrity through centralized control.
 
