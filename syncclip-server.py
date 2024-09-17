@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template_string, abort
+from flask import Flask, request, jsonify, render_template, abort
 from flask_cors import CORS
 import uuid
 import sqlite3
@@ -43,16 +43,16 @@ def update_clipboard(token):
     cursor = db.execute('SELECT * FROM clipboards WHERE token = ?', (token,))
     if cursor.fetchone() is None:
         return jsonify({"error": "Invalid token"}), 404
-    
+
     content = request.get_data(as_text=True)  # Get raw data as text
     compressed_content = compress_content(content)
-    
-    db.execute('UPDATE clipboards SET content = ?, last_updated = CURRENT_TIMESTAMP WHERE token = ?', 
-               (sqlite3.Binary(compressed_content), token))
+
+    db.execute('UPDATE clipboards SET content = ?, last_updated = CURRENT_TIMESTAMP WHERE token = ?',
+              (sqlite3.Binary(compressed_content), token))
     db.commit()
 
     # Remove old entries, keeping only the latest 10 across all tokens
-    db.execute('''DELETE FROM clipboards WHERE token NOT IN 
+    db.execute('''DELETE FROM clipboards WHERE token NOT IN
                   (SELECT token FROM clipboards ORDER BY last_updated DESC LIMIT 10)''')
     db.commit()
 
@@ -65,7 +65,7 @@ def get_clipboard(token):
     row = cursor.fetchone()
     if row is None:
         return jsonify({"error": "Invalid token"}), 404
-    
+
     compressed_content = row['content']
     content = decompress_content(compressed_content)
     return jsonify({"content": content}), 200
@@ -77,41 +77,27 @@ def display_clipboard(token):
     row = cursor.fetchone()
     if row is None:
         abort(404)
+
     compressed_content = row['content']
     content = decompress_content(compressed_content)
-    
+
     # Escape the content to safely display it in HTML
     safe_content = html.escape(content)
-    
-    html_content = '''
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>SyncClip Content</title>
-        <meta http-equiv="refresh" content="5">
-        <style>
-            #clipboard-content {
-                width: 100%;
-                height: 400px;
-                white-space: pre-wrap;
-                word-wrap: break-word;
-                overflow-y: auto;
-                border: 1px solid #ccc;
-                padding: 10px;
-                font-family: monospace;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>SyncClip Content</h1>
-        <div id="clipboard-content">%s</div>
-    </body>
-    </html>
-    ''' % safe_content
 
-    return render_template_string(html_content)
+    return render_template('display_clipboard.html', content=content)
+
+# Error handling
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({"error": "Not found"}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({"error": "Internal server error"}), 500
 
 # Initialize the database
 init_db()
 
-# We don't need the if __name__ == '__main__': block for Gunicorn
+# Add this for running with Gunicorn
+if __name__ == "__main__":
+    app.run(host='127.0.0.1', port=5000)
