@@ -19,3 +19,10 @@ sudo chown www-data:www-data /var/log/gunicorn
 pip install -r requirements.txt
 gunicorn --bind 127.0.0.1:5000 /path/to/syncclip-server:app
 ```
+Setup Nginx reverse proxy which acts as a buffer between clients and your application server.
+```
+location / {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_set_header Host $host;
+    }
+```
