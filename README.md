@@ -13,6 +13,7 @@ This Python tool is designed to facilitate clipboard sharing between two hosts t
 This tool simplifies the process of clipboard sharing between disconnected systems while maintaining security and data integrity through centralized control.
 
 ## Setup & Installation
+Run this on server:
 ```
 sudo mkdir -p /var/log/gunicorn
 sudo chown www-data:www-data /var/log/gunicorn
@@ -26,4 +27,9 @@ location /syncclip {
         proxy_pass http://127.0.0.1:5000;
         proxy_set_header Host $host;
     }
+```
+Run this on client:
+```
+pip install -r requirements.txt
+python3 syncclip-client.py
 ```
