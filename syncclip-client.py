@@ -2,7 +2,7 @@ import requests
 import pyperclip
 import time
 
-SERVER_URL = 'https://example.com'  # CHANGEME
+SERVER_URL = 'https://example.com/syncclip'  # CHANGEME
 TOKEN = None
 
 def get_token():
