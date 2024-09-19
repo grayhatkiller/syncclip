@@ -21,7 +21,8 @@ gunicorn --bind 127.0.0.1:5000 /path/to/syncclip-server:app
 ```
 Setup Nginx reverse proxy which acts as a buffer between clients and your application server.
 ```
-location / {
+location /syncclip {
+        rewrite ^/syncclip$ $1 break;
         proxy_pass http://127.0.0.1:5000;
         proxy_set_header Host $host;
     }
